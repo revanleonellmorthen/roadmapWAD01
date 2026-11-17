@@ -5,7 +5,7 @@ import { topik } from './data.js'
 
 function App() {
   return (
-    <div className="font-sans leading-relaxed text-[#1c2333]">
+    <div className="font-sans leading-relaxed text-foreground">
       <Header />
 
       <main>
@@ -13,14 +13,14 @@ function App() {
           <h1 className="mb-3 text-3xl font-bold">
             Roadmap-Rvn - WAD Blok B
           </h1>
-          <p className="max-w-[60ch] text-slate-500">
+          <p className="max-w-[60ch] text-muted-foreground">
             Roadmap-Rvn adalah alur pembelajaran WAD di blok B. Materi dimulai
             dari struktur semantik sampai layout Flexbox dan Grid, lalu
             JavaScript, Tailwind, dan React.
           </p>
         </section>
 
-        <section id="fitur" className="bg-[#f5f7fb] px-10 py-16">
+        <section id="fitur" className="bg-muted px-10 py-16">
           <div className="mx-auto max-w-[1000px]">
             <h2 className="mb-6 text-2xl font-bold">Apa yang dipelajari</h2>
 

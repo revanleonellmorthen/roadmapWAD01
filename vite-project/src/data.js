@@ -4,18 +4,22 @@ export const topik = [
     judul: 'HTML Semantik',
     deskripsi:
       'Memakai tag header, main, section, dan footer agar struktur jelas.',
+    status: 'sudah dipelajari',
   },
   {
     judul: 'CSS Layout',
     deskripsi: 'Menyusun elemen sejajar dan rapi dengan Flexbox dan Grid.',
-  },
-  {
-    judul: 'JavaScript',
-    deskripsi: 'Menambahkan interaktivitas ke halaman web.',
+    status: 'sudah dipelajari',
   },
   {
     judul: 'Tailwind CSS',
     deskripsi: 'Menulis style lewat class utility, tanpa file CSS terpisah.',
+    status: 'Sudah dipelajari',
+  },
+  {
+    judul: 'JavaScript',
+    deskripsi: 'Menambahkan interaktivitas ke halaman web.',
+    status: 'Sedang dipelajari',
   },
   {
     judul: 'React',

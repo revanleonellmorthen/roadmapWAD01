@@ -3,26 +3,35 @@
 Halaman roadmap belajar WAD Blok B — versi React dari
 `../tailwind/migrasi_CSS-tailwind`, yang tadinya HTML + Tailwind statis.
 
-Status: **porting selesai**. Belum ada state/interaksi, beda dari versi HTML
-cuma di cara menyusun markup.
+Status: **porting selesai + komponen shadcn**. Belum ada state/interaksi, beda
+dari versi HTML cuma di cara menyusun markup dan asal komponen.
 
 ## Struktur
 
 ```
 vite-project/
 ├── index.html              <- shell, #root + judul halaman
-├── vite.config.js          <- plugin react + @tailwindcss/vite
+├── vite.config.js          <- plugin react + @tailwindcss/vite + alias @/
+├── jsconfig.json           <- alias @/ buat editor & CLI shadcn
+├── components.json         <- config shadcn (style base-nova, baseColor neutral)
 ├── src/
 │   ├── main.jsx            <- pintu masuk, render <App /> ke #root
 │   ├── App.jsx             <- susun Header + section + Footer
 │   ├── data.js             <- array topik (sumber isi card)
-│   ├── index.css           <- 1 baris: @import "tailwindcss";
+│   ├── index.css           <- Tailwind + variabel tema shadcn + font Geist
+│   ├── lib/
+│   │   └── utils.js        <- cn(): gabung class tanpa bentrok
 │   └── components/
 │       ├── Header.jsx      <- logo + nav
-│       ├── TopikCard.jsx   <- satu card, terima props
-│       └── Footer.jsx      <- 3 kolom
+│       ├── TopikCard.jsx   <- Card + Badge shadcn, terima props
+│       ├── Footer.jsx      <- 3 kolom
+│       └── ui/             <- KODE VENDOR shadcn, jangan diubah strukturnya
+│           ├── card.jsx
+│           ├── badge.jsx
+│           └── button.jsx
 └── package.json
 ```
+
 
 ## Perintah
 
@@ -79,6 +88,46 @@ ES module — sama seperti yang dipakai di `vite.config.js`.
 **8. Tailwind v4 di Vite.** Cukup plugin `tailwindcss()` + `@import "tailwindcss";`.
 Tidak ada `style.css` hasil build (beda dari project Tailwind CLI sebelumnya) —
 Vite yang compile saat dev dan saat `npm run build`.
+
+## Shadcn/ui
+
+Terpasang lewat CLI, bukan `npm install` komponen:
+
+```powershell
+npx.cmd shadcn@latest init          # sekali per project
+npx.cmd shadcn@latest add card badge  # tiap komponen yang dipakai
+```
+
+Yang terjadi: source komponen **disalin** ke `src/components/ui/`, bukan diambil
+dari `node_modules`. Jadi file itu milik project — boleh diedit, tapi tidak ikut
+update kalau CLI upgrade.
+
+Versi yang kepasang: **shadcn v4, style `base-nova`**. Bedanya dari tutorial lama:
+
+| Tutorial lama | Project ini |
+|---|---|
+| Radix UI | **Base UI** (`@base-ui/react`) |
+| `clsx` + `tailwind-merge` | package **`cn`** (drop-in resmi dari shadcn-ui) |
+| variabel warna `--primary` | sama, tapi ditambah `--chart-1..5`, `--sidebar-*` |
+| font system | **Geist** (`@fontsource-variable/geist`) |
+
+**`cn()`** menggabungkan class dan menyelesaikan bentrok. Di file ui dipakai
+seperti `cn("p-4", className)` — `className` dari pemanggil menang atas `p-4`.
+
+**Varian** dibuat dengan CVA. `<Badge variant="secondary" />` — varian yang ada:
+`default`, `secondary`, `destructive`, `outline`, `ghost`, `link`.
+
+**Tema** bukan warna hardcode, tapi CSS variable di `src/index.css`. Class
+seperti `text-foreground` dan `bg-muted` mengambil nilai dari sana, jadi ganti
+`--primary` sekali = semua komponen ikut.
+
+**Alias `@/`** disiapkan dua kali: `jsconfig.json` (buat editor dan CLI) dan
+`resolve.alias` di `vite.config.js` (buat Vite saat build). Tanpa keduanya,
+`import { Card } from '@/components/ui/card'` gagal.
+
+**Lint:** file di `src/components/ui/` dikecualikan dari rule
+`react-refresh/only-export-components` di `eslint.config.js`, karena satu file
+mengekspor komponen sekaligus varian `cva`. Itu pola bawaan shadcn.
 
 ## Cara menambah topik
 

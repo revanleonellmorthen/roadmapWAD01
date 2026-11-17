@@ -1,15 +1,21 @@
-// props = data dari App. Satu card, dipakai berkali-kali lewat map.
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+
 function TopikCard({ judul, deskripsi, status }) {
   return (
-    <article className="rounded-lg border border-gray-300 bg-white p-5">
-      <h3 className="mb-2 font-semibold">{judul}</h3>
-      <p className="text-slate-500">{deskripsi}</p>
-      {status && (
-        <span className="mt-3 inline-block rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
-          {status}
-        </span>
-      )}
-    </article>
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-base">{judul}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-muted-foreground">{deskripsi}</p>
+        {status && (
+          <Badge variant="secondary" className="mt-3">
+            {status}
+          </Badge>
+        )}
+      </CardContent>
+    </Card>
   )
 }
 
