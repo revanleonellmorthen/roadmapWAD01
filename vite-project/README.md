@@ -3,8 +3,8 @@
 Halaman roadmap belajar WAD Blok B — versi React dari
 `../tailwind/migrasi_CSS-tailwind`, yang tadinya HTML + Tailwind statis.
 
-Status: **porting selesai + komponen shadcn**. Belum ada state/interaksi, beda
-dari versi HTML cuma di cara menyusun markup dan asal komponen.
+Status: **porting + shadcn + latihan hooks**. Bagian latihan sudah pakai state
+(`useState`) dan effect (`useEffect`); halaman utama masih statis.
 
 ## Struktur
 
@@ -21,14 +21,18 @@ vite-project/
 │   ├── index.css           <- Tailwind + variabel tema shadcn + font Geist
 │   ├── lib/
 │   │   └── utils.js        <- cn(): gabung class tanpa bentrok
-│   └── components/
-│       ├── Header.jsx      <- logo + nav
-│       ├── TopikCard.jsx   <- Card + Badge shadcn, terima props
-│       ├── Footer.jsx      <- 3 kolom
-│       └── ui/             <- KODE VENDOR shadcn, jangan diubah strukturnya
-│           ├── card.jsx
-│           ├── badge.jsx
-│           └── button.jsx
+│   ├── components/
+│   │   ├── Header.jsx      <- logo + nav
+│   │   ├── TopikCard.jsx   <- Card + Badge shadcn, terima props
+│   │   ├── Footer.jsx      <- 3 kolom
+│   │   └── ui/             <- KODE VENDOR shadcn, jangan diubah strukturnya
+│   │       ├── card.jsx
+│   │       ├── badge.jsx
+│   │       └── button.jsx
+│   └── latihan/            <- tugas Minggu 3
+│       ├── Counter.jsx     <- useState: angka
+│       ├── TodoList.jsx    <- useState: array + input terkontrol
+│       └── FetchData.jsx   <- useEffect: fetch + loading/error
 └── package.json
 ```
 
@@ -129,6 +133,36 @@ seperti `text-foreground` dan `bg-muted` mengambil nilai dari sana, jadi ganti
 `react-refresh/only-export-components` di `eslint.config.js`, karena satu file
 mengekspor komponen sekaligus varian `cva`. Itu pola bawaan shadcn.
 
+## Latihan Hooks (Minggu 3)
+
+Tiga komponen di `src/latihan/`, semuanya tampil di section `#latihan`.
+
+| File | Hook | Yang diperlihatkan |
+|---|---|---|
+| `Counter.jsx` | `useState` | angka, update fungsional (`c => c + 1`) vs `count + 1` |
+| `TodoList.jsx` | `useState` | input terkontrol, array tidak diubah langsung (`map`/`filter`) |
+| `FetchData.jsx` | `useEffect` | fetch + `loading`/`error`, dependency `[coba]`, cleanup `AbortController` |
+
+**`useState`** menyimpan data yang berubah antar render. Setter memicu render
+ulang; mengubah nilai variabel biasa tidak. Array/object harus **diganti**
+(`[...d, x]`), bukan diubah (`d.push(x)`), supaya React melihat bedanya.
+
+**`useEffect`** menyinkronkan komponen dengan hal di luar React (fetch,
+`localStorage`, timer). Jalan **setelah** render selesai:
+
+| Dependency | Kapan jalan |
+|---|---|
+| tidak ditulis | setiap render |
+| `[]` | sekali saat mount |
+| `[coba]` | mount + setiap `coba` berubah |
+
+Cleanup (fungsi yang dikembalikan effect) jalan sebelum effect berikutnya dan
+saat komponen hilang. Di mode dev, StrictMode sengaja menjalankan effect dua
+kali untuk membongkar cleanup yang salah — itu bukan bug.
+
+Catatan lengkap, termasuk kesulitan yang dihadapi:
+[`catatan-usestate-useeffect.md`](./catatan-usestate-useeffect.md).
+
 ## Cara menambah topik
 
 Edit `src/data.js`, tambah object `{ judul, deskripsi }`. Card baru otomatis
@@ -137,8 +171,9 @@ muncul, tidak perlu sentuh komponen. `status` opsional — kalau diisi, badge
 
 ## Yang sengaja belum ada
 
-- State (`useState`) — checkbox selesai, progress bar
+- Persistensi status (`localStorage`) — centang hilang saat refresh
+- Checkbox per topik + progress bar di halaman utama
 - Routing — sekarang cuma satu halaman + anchor
-- LocalStorage
+- Form + validasi (`react-hook-form` + `zod`)
 
-Itu project berikutnya, setelah props dan list rendering terasa biasa.
+Itu masuk Minggu 3-4, setelah `useState` dan `useEffect` terasa biasa.
