@@ -3,6 +3,7 @@ import Header from './components/Header.jsx'
 import TopikCard from './components/TopikCard.jsx'
 import { topik } from './data.js'
 import Counter from './latihan/Counter.jsx'
+import TodoList from './latihan/TodoList.jsx'
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
 
       <main>
         <Counter />
+        <TodoList />
         <section id="pengenalan" className="mx-auto max-w-[1000px] px-10 py-16">
           <h1 className="mb-3 text-3xl font-bold">
             Roadmap-Rvn - WAD Blok B
