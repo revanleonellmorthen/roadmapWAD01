@@ -21,6 +21,8 @@ function Header() {
               Kontak
             </a>
           </li>
+
+          <li><a href="#latihan">Latihan</a></li>
         </ul>
       </nav>
     </header>
