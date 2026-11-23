@@ -11,8 +11,6 @@ function FetchData() {
     useEffect(() => {
         console.log('effect jalan, coba =', coba)
         const kontrol = new AbortController()
-        setLoading(true)
-        setError(null)
 
         fetch(URL_USERS, { signal: kontrol.signal })
             .then((r) => {
@@ -21,7 +19,9 @@ function FetchData() {
             })
             .then((data) => setUsers(data))
             .catch((e) => { if (e.name !== 'AbortError') setError(e.message) })
-            .finally(() => setLoading(false))
+            .finally(() => {
+                if (!kontrol.signal.aborted) setLoading(false)
+            })
 
         return () => kontrol.abort()   // cleanup
     }, [coba])
@@ -30,7 +30,11 @@ function FetchData() {
     if (error) return (
         <div className="text-sm">
             <p className="text-destructive">Gagal: {error}</p>
-            <button className="mt-2 underline" onClick={() => setCoba((c) => c + 1)}>coba lagi</button>
+            <button className="mt-2 underline" onClick={() => {
+                setLoading(true)
+                setError(null)
+                setCoba((c) => c + 1)
+            }}>coba lagi</button>
         </div>
     )
 
