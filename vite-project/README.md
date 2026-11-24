@@ -1,179 +1,138 @@
-# Roadmap-Rvn (React)
+# Roadmap-Rvn
 
-Halaman roadmap belajar WAD Blok B — versi React dari
-`../tailwind/migrasi_CSS-tailwind`, yang tadinya HTML + Tailwind statis.
+Website untuk mencatat perjalanan belajar WAD Blok B — dari HTML sampai React.
+Dibuat dengan React, Tailwind CSS, dan komponen shadcn/ui.
 
-Status: **porting + shadcn + latihan hooks**. Bagian latihan sudah pakai state
-(`useState`) dan effect (`useEffect`); halaman utama masih statis.
+Isinya empat halaman: beranda yang menampilkan daftar topik, halaman detail tiap
+topik, halaman latihan hooks, dan halaman 404 untuk alamat yang tidak ada.
 
-## Struktur
+## Cara menjalankan
+
+```powershell
+cd vite-project
+npm.cmd run dev      # buka http://localhost:5173
+```
+
+Perintah lain:
+
+```powershell
+npm.cmd run build    # membuat versi siap upload ke folder dist/
+npm.cmd run lint     # memeriksa kesalahan kode
+```
+
+Kenapa `npm.cmd`, bukan `npm`? Di komputer ini PowerShell memblokir file
+`npm.ps1` (kebijakan keamanan Windows). Memakai `npm.cmd` melewati masalah itu.
+Kalau mau permanen: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
+
+## Halaman yang tersedia
+
+| Alamat | Isi |
+|---|---|
+| `/` | Beranda: penjelasan singkat + 5 card topik |
+| `/topik/html-semantik` | Detail satu topik |
+| `/latihan` | Tiga latihan hooks (counter, to-do, fetch data) |
+| alamat lain | Halaman 404 |
+
+**Cara kerja perpindahan halaman:** saat card diklik, React mengganti isi
+halaman tanpa memuat ulang seluruh website. Header dan footer tetap di tempat,
+alamat di browser berubah, dan tombol back tetap berfungsi. Karena setiap
+halaman punya alamat sendiri, halaman detail bisa dibagikan lewat link dan tetap
+terbuka walau di-refresh.
+
+Alamat detail dibuat dari kata kunci topik (`slug`). Contohnya topik React
+punya slug `react`, jadi alamatnya `/topik/react`. Kalau alamatnya tidak cocok
+dengan topik mana pun, muncul pesan "Topik tidak ada" — bukan halaman error.
+
+## Struktur folder
 
 ```
 vite-project/
-├── index.html              <- shell, #root + judul halaman
-├── vite.config.js          <- plugin react + @tailwindcss/vite + alias @/
-├── jsconfig.json           <- alias @/ buat editor & CLI shadcn
-├── components.json         <- config shadcn (style base-nova, baseColor neutral)
-├── src/
-│   ├── main.jsx            <- pintu masuk, render <App /> ke #root
-│   ├── App.jsx             <- susun Header + section + Footer
-│   ├── data.js             <- array topik (sumber isi card)
-│   ├── index.css           <- Tailwind + variabel tema shadcn + font Geist
-│   ├── lib/
-│   │   └── utils.js        <- cn(): gabung class tanpa bentrok
-│   ├── components/
-│   │   ├── Header.jsx      <- logo + nav
-│   │   ├── TopikCard.jsx   <- Card + Badge shadcn, terima props
-│   │   ├── Footer.jsx      <- 3 kolom
-│   │   └── ui/             <- KODE VENDOR shadcn, jangan diubah strukturnya
-│   │       ├── card.jsx
-│   │       ├── badge.jsx
-│   │       └── button.jsx
-│   └── latihan/            <- tugas Minggu 3
-│       ├── Counter.jsx     <- useState: angka
-│       ├── TodoList.jsx    <- useState: array + input terkontrol
-│       └── FetchData.jsx   <- useEffect: fetch + loading/error
-└── package.json
+├── index.html
+├── vite.config.js          <- pengaturan Vite (React, Tailwind, alias @/)
+├── jsconfig.json           <- supaya editor paham arti @/ (folder src)
+├── components.json         <- pengaturan shadcn
+└── src/
+    ├── main.jsx            <- titik awal: menyalakan React + router
+    ├── App.jsx             <- daftar alamat dan halaman yang ditampilkan
+    ├── index.css           <- Tailwind, warna tema, font
+    ├── data.js             <- isi topik (judul, deskripsi, status, slug)
+    ├── lib/utils.js        <- fungsi cn() untuk menggabung class CSS
+    ├── pages/
+    │   ├── Layout.jsx      <- bingkai: header + isi halaman + footer
+    │   ├── Home.jsx        <- beranda
+    │   ├── DetailTopik.jsx <- detail satu topik
+    │   ├── Latihan.jsx     <- latihan hooks
+    │   └── TidakDitemukan.jsx
+    ├── components/
+    │   ├── Header.jsx      <- menu atas
+    │   ├── Footer.jsx
+    │   ├── TopikCard.jsx   <- card satu topik
+    │   └── ui/             <- komponen shadcn (card, badge, button)
+    └── latihan/
+        ├── Counter.jsx
+        ├── TodoList.jsx
+        └── FetchData.jsx
 ```
 
+## Konsep yang dipakai, dengan bahasa sederhana
 
-## Perintah
+**Komponen.** Satu bagian tampilan ditulis sebagai satu fungsi yang
+mengembalikan HTML. `Header.jsx` berisi menu, `TopikCard.jsx` berisi card. Nama
+komponen selalu diawali huruf besar, dan dipakai seperti tag: `<Header />`.
 
-```powershell
-npm.cmd run dev     # http://localhost:5173
-npm.cmd run build   # hasil ke dist/
-npm.cmd run lint
-```
+**Props.** Data yang dikirim dari komponen induk ke anak. `TopikCard` tidak tahu
+topik apa pun; dia hanya menggambar apa yang dikirim lewat `judul`, `deskripsi`,
+dan `status`. Karena itu satu card bisa dipakai untuk lima topik berbeda.
 
-`npm.cmd`, bukan `npm`: PowerShell di mesin ini memblokir `npm.ps1`
-(execution policy). Alternatif sekali jalan:
-`Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
+**Satu sumber data.** Semua isi topik ada di `data.js`. Menambah topik berarti
+menambah satu baris di sana; halaman beranda dan halaman detail otomatis ikut
+karena keduanya membaca file yang sama.
 
-## Konsep React yang dipakai di sini
+**State.** Ingatan milik komponen — data yang bisa berubah selama halaman
+terbuka. Di `Counter.jsx` ingatannya adalah angka; di `TodoList.jsx` ingatannya
+adalah daftar tugas. Perubahan hanya terlihat di layar kalau diubah lewat fungsi
+pengubah dari `useState`, bukan dengan mengganti variabel biasa.
 
-**1. Komponen = fungsi yang mengembalikan JSX.** `function Header() { return (...) }`.
-Nama file dan nama fungsi pakai huruf besar — `<Header />` dibaca React sebagai
-komponen, `<header>` sebagai tag HTML biasa.
+**Effect.** Tugas tambahan yang dijalankan **setelah** tampilan selesai digambar.
+Dipakai untuk urusan di luar React, contohnya mengambil data dari internet
+seperti di `FetchData.jsx`. Kapan diulang diatur oleh daftar di akhir
+`useEffect`; `[]` berarti cukup sekali.
 
-**2. Panggil komponen seperti tag.** `<Header />` di `App.jsx` menyisipkan hasil
-fungsi Header ke situ. Satu file = satu komponen, export default di bawah.
+**Routing.** Peta antara alamat di browser dan halaman yang ditampilkan, diatur
+di `App.jsx`. Menu memakai `Link`/`NavLink` supaya perpindahan tidak memuat ulang
+website. Halaman detail membaca bagian alamat lewat `useParams` — misalnya dari
+`/topik/react` didapat `react`, lalu dicari di `data.js`.
 
-**3. props = parameter komponen.**
+**Tampilan.** Warna, jarak, dan ukuran ditulis langsung sebagai class Tailwind.
+Komponen `Card`, `Badge`, dan `Button` berasal dari shadcn: kodenya disalin ke
+`src/components/ui/`, jadi boleh diedit dan tidak diambil dari internet saat
+website dibuka. Warna temanya diatur lewat variabel di `index.css`.
 
-```jsx
-<TopikCard judul={t.judul} deskripsi={t.deskripsi} status={t.status} />
-// di TopikCard.jsx:
-function TopikCard({ judul, deskripsi, status }) { ... }
-```
-
-Satu arah: App -> Card. Card tidak bisa mengubah data App (itu baru mungkin
-dengan state + callback, belum ada di sini).
-
-**4. `.map()` + `key` untuk daftar.** Card tidak ditulis 5x, tapi:
-
-```jsx
-{topik.map((t) => <TopikCard key={t.judul} ... />)}
-```
-
-`key` harus unik dan stabil, supaya React tahu card mana yang berubah saat
-daftar berubah. Jangan pakai index array kalau urutan bisa berubah.
-
-**5. `{...}` di JSX = ekspresi JavaScript.** `{judul}`, `{status && <span/>}`
-(render kondisional: `&&` hanya jalan kalau `status` truthy), dan `{}` di dalam
-atribut berarti nilai JS, bukan string.
-
-**6. JSX beda dari HTML:** `class` -> `className`, atribut camelCase
-(`onClick`), semua tag harus ditutup (`<img />`), dan satu komponen hanya boleh
-mengembalikan satu elemen induk (`<>...</>` kalau perlu pembungkus hantu).
-
-**7. `import` / `export`.** `data.js` export `topik`, `App.jsx` import. Gaya
-ES module — sama seperti yang dipakai di `vite.config.js`.
-
-**8. Tailwind v4 di Vite.** Cukup plugin `tailwindcss()` + `@import "tailwindcss";`.
-Tidak ada `style.css` hasil build (beda dari project Tailwind CLI sebelumnya) —
-Vite yang compile saat dev dan saat `npm run build`.
-
-## Shadcn/ui
-
-Terpasang lewat CLI, bukan `npm install` komponen:
-
-```powershell
-npx.cmd shadcn@latest init          # sekali per project
-npx.cmd shadcn@latest add card badge  # tiap komponen yang dipakai
-```
-
-Yang terjadi: source komponen **disalin** ke `src/components/ui/`, bukan diambil
-dari `node_modules`. Jadi file itu milik project — boleh diedit, tapi tidak ikut
-update kalau CLI upgrade.
-
-Versi yang kepasang: **shadcn v4, style `base-nova`**. Bedanya dari tutorial lama:
-
-| Tutorial lama | Project ini |
-|---|---|
-| Radix UI | **Base UI** (`@base-ui/react`) |
-| `clsx` + `tailwind-merge` | package **`cn`** (drop-in resmi dari shadcn-ui) |
-| variabel warna `--primary` | sama, tapi ditambah `--chart-1..5`, `--sidebar-*` |
-| font system | **Geist** (`@fontsource-variable/geist`) |
-
-**`cn()`** menggabungkan class dan menyelesaikan bentrok. Di file ui dipakai
-seperti `cn("p-4", className)` — `className` dari pemanggil menang atas `p-4`.
-
-**Varian** dibuat dengan CVA. `<Badge variant="secondary" />` — varian yang ada:
-`default`, `secondary`, `destructive`, `outline`, `ghost`, `link`.
-
-**Tema** bukan warna hardcode, tapi CSS variable di `src/index.css`. Class
-seperti `text-foreground` dan `bg-muted` mengambil nilai dari sana, jadi ganti
-`--primary` sekali = semua komponen ikut.
-
-**Alias `@/`** disiapkan dua kali: `jsconfig.json` (buat editor dan CLI) dan
-`resolve.alias` di `vite.config.js` (buat Vite saat build). Tanpa keduanya,
-`import { Card } from '@/components/ui/card'` gagal.
-
-**Lint:** file di `src/components/ui/` dikecualikan dari rule
-`react-refresh/only-export-components` di `eslint.config.js`, karena satu file
-mengekspor komponen sekaligus varian `cva`. Itu pola bawaan shadcn.
-
-## Latihan Hooks (Minggu 3)
-
-Tiga komponen di `src/latihan/`, semuanya tampil di section `#latihan`.
-
-| File | Hook | Yang diperlihatkan |
-|---|---|---|
-| `Counter.jsx` | `useState` | angka, update fungsional (`c => c + 1`) vs `count + 1` |
-| `TodoList.jsx` | `useState` | input terkontrol, array tidak diubah langsung (`map`/`filter`) |
-| `FetchData.jsx` | `useEffect` | fetch + `loading`/`error`, dependency `[coba]`, cleanup `AbortController` |
-
-**`useState`** menyimpan data yang berubah antar render. Setter memicu render
-ulang; mengubah nilai variabel biasa tidak. Array/object harus **diganti**
-(`[...d, x]`), bukan diubah (`d.push(x)`), supaya React melihat bedanya.
-
-**`useEffect`** menyinkronkan komponen dengan hal di luar React (fetch,
-`localStorage`, timer). Jalan **setelah** render selesai:
-
-| Dependency | Kapan jalan |
-|---|---|
-| tidak ditulis | setiap render |
-| `[]` | sekali saat mount |
-| `[coba]` | mount + setiap `coba` berubah |
-
-Cleanup (fungsi yang dikembalikan effect) jalan sebelum effect berikutnya dan
-saat komponen hilang. Di mode dev, StrictMode sengaja menjalankan effect dua
-kali untuk membongkar cleanup yang salah — itu bukan bug.
-
-Catatan lengkap, termasuk kesulitan yang dihadapi:
+Catatan lebih dalam soal state dan effect ada di
 [`catatan-usestate-useeffect.md`](./catatan-usestate-useeffect.md).
 
-## Cara menambah topik
+## Menambah atau mengubah topik
 
-Edit `src/data.js`, tambah object `{ judul, deskripsi }`. Card baru otomatis
-muncul, tidak perlu sentuh komponen. `status` opsional — kalau diisi, badge
-"Sedang dipelajari" muncul.
+Edit `src/data.js`. Setiap topik butuh empat hal:
 
-## Yang sengaja belum ada
+```js
+{
+  slug: 'bootstrap',                    // bagian alamat: /topik/bootstrap
+  judul: 'Bootstrap',
+  deskripsi: 'Grid dan komponen siap pakai.',
+  status: 'Belum dipelajari',           // opsional
+}
+```
 
-- Persistensi status (`localStorage`) — centang hilang saat refresh
-- Checkbox per topik + progress bar di halaman utama
-- Routing — sekarang cuma satu halaman + anchor
-- Form + validasi (`react-hook-form` + `zod`)
+`slug` harus unik dan tanpa spasi (pakai tanda hubung). Kalau dua topik punya
+slug sama, halaman detail akan menampilkan yang pertama ditemukan.
 
-Itu masuk Minggu 3-4, setelah `useState` dan `useEffect` terasa biasa.
+## Yang belum ada
+
+- Data belum tersimpan permanen. Kalau halaman di-refresh, isi to-do hilang,
+  dan topik baru harus ditambah lewat `data.js`.
+- Belum ada form untuk menambah topik dari website.
+- Detail topik masih satu paragraf; belum ada halaman materi per topik.
+- Belum terhubung ke API atau login sungguhan.
+- Kalau nanti di-upload ke hosting, server perlu diatur supaya semua alamat
+  diarahkan ke `index.html`, kalau tidak halaman detail akan 404 saat di-refresh.

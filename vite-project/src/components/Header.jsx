@@ -1,28 +1,16 @@
+import { NavLink } from 'react-router'
+
+const kelas = ({ isActive }) =>
+  isActive ? 'text-blue-600' : 'hover:text-blue-600'
+
 function Header() {
   return (
     <header className="flex items-center justify-between border-b border-gray-300 px-10 py-4">
-      <a className="text-lg font-bold" href="#">
-        Roadmap-Rvn
-      </a>
+      <NavLink className="text-lg font-bold" to="/">Roadmap-Rvn</NavLink>
       <nav>
         <ul className="flex gap-6">
-          <li>
-            <a className="hover:text-blue-600" href="#pengenalan">
-              Pengenalan
-            </a>
-          </li>
-          <li>
-            <a className="hover:text-blue-600" href="#fitur">
-              Fitur
-            </a>
-          </li>
-          <li>
-            <a className="hover:text-blue-600" href="#kontak">
-              Kontak
-            </a>
-          </li>
-
-          <li><a href="#latihan">Latihan</a></li>
+          <li><NavLink className={kelas} to="/" end>Beranda</NavLink></li>
+          <li><NavLink className={kelas} to="/latihan">Latihan</NavLink></li>
         </ul>
       </nav>
     </header>
