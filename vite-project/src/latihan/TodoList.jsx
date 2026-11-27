@@ -30,7 +30,7 @@ function TodoList() {
     const sisa = daftar.filter((t) => !t.selesai).length
 
     return (
-        <div className="rounded-lg border p-5">
+        <div className="rounded-lg border border-border bg-card p-5">
             <h3 className="mb-3 font-semibold">To-do</h3>
 
             <form onSubmit={tambah} className="flex gap-2">

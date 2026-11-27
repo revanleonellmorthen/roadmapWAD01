@@ -5,7 +5,7 @@ function Counter() {
     const [count, setCount] = useState(0)
 
     return (
-        <div className="rounded-lg border p-5">
+        <div className="rounded-lg border border-border bg-card p-5">
             <p className="text-2xl font-bold">{count}</p>
             <p className="text-sm text-muted-foreground">
                 dobel: {count * 2} (dihitung tiap render, bukan state)

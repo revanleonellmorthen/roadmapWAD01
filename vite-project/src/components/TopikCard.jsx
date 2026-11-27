@@ -10,7 +10,7 @@ function TopikCard({ judul, deskripsi, status }) {
       <CardContent>
         <p className="text-muted-foreground">{deskripsi}</p>
         {status && (
-          <Badge variant="secondary" className="mt-3">
+          <Badge className="mt-3 bg-accent text-accent-foreground">
             {status}
           </Badge>
         )}
