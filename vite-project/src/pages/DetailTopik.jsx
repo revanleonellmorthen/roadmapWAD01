@@ -21,6 +21,11 @@ function DetailTopik() {
             </Link>
             <h1 className="mt-4 mb-3 text-3xl font-bold">{t.judul}</h1>
             <p className="max-w-[60ch] text-muted-foreground">{t.deskripsi}</p>
+            {t.Materi?.map((paragraf, i) => (
+                <p key={i} className="mt-4 max-w-[60ch] text-muted-background">
+                    {paragraf}
+                </p>
+            ))}
             <p className="mt-6 text-sm">
                 Status: {t.status ?? 'Selesai dipelajari'}
             </p>

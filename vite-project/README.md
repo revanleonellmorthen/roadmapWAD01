@@ -126,13 +126,3 @@ Edit `src/data.js`. Setiap topik butuh empat hal:
 
 `slug` harus unik dan tanpa spasi (pakai tanda hubung). Kalau dua topik punya
 slug sama, halaman detail akan menampilkan yang pertama ditemukan.
-
-## Yang belum ada
-
-- Data belum tersimpan permanen. Kalau halaman di-refresh, isi to-do hilang,
-  dan topik baru harus ditambah lewat `data.js`.
-- Belum ada form untuk menambah topik dari website.
-- Detail topik masih satu paragraf; belum ada halaman materi per topik.
-- Belum terhubung ke API atau login sungguhan.
-- Kalau nanti di-upload ke hosting, server perlu diatur supaya semua alamat
-  diarahkan ke `index.html`, kalau tidak halaman detail akan 404 saat di-refresh.

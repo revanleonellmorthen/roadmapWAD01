@@ -7,6 +7,7 @@ export const topik = [
     deskripsi:
       'Memakai tag header, main, section, dan footer agar struktur jelas.',
     status: 'sudah dipelajari',
+    Materi: ['HTML sematik berarti memakai tag yang maknanya sesuai dengan isinya'],
   },
   {
     slug: 'css-layout',
