@@ -7,7 +7,17 @@ export const topik = [
     deskripsi:
       'Memakai tag header, main, section, dan footer agar struktur jelas.',
     status: 'sudah dipelajari',
-    Materi: ['HTML sematik berarti memakai tag yang maknanya sesuai dengan isinya'],
+    materi: [
+      'HTML semantik berarti memakai tag yang maknanya sesuai dengan isinya, bukan sekadar div untuk semua hal. Tujuannya agar struktur halaman bisa dipahami mesin pencari, pembaca layar, dan orang lain yang membaca kodenya.',
+      'Bagian halaman yang paling sering dipakai: header untuk pembuka, nav untuk kumpulan link, main untuk isi utama, section untuk kelompok konten, dan footer untuk penutup.',
+    ],
+    poin: [
+      'header — pembuka halaman atau satu bagian',
+      'nav — kumpulan link navigasi',
+      'main — isi utama, hanya boleh satu per halaman',
+      'section — kelompok konten yang punya judul',
+      'footer — penutup: hak cipta, kontak, link tambahan',
+    ],
   },
   {
     slug: 'css-layout',

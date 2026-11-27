@@ -3,15 +3,15 @@ import Footer from '../components/Footer.jsx'
 import Header from '../components/Header.jsx'
 
 function Layout() {
-    return (
-        <div className="font-sans leading-relaxed text-foreground">
-            <Header />
-            <main>
-                <Outlet />
-            </main>
-            <Footer />
-        </div>
-    )
+  return (
+    <div className="flex min-h-screen flex-col font-sans leading-relaxed text-foreground">
+      <Header />
+      <main className="flex-1">
+        <Outlet />
+      </main>
+      <Footer />
+    </div>
+  )
 }
 
 export default Layout

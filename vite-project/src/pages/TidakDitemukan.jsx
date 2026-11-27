@@ -1,13 +1,22 @@
 import { Link } from 'react-router'
+import Container from '../components/Container.jsx'
 
 function TidakDitemukan() {
-    return (
-        <section className="mx-auto max-w-[1000px] px-10 py-24 text-center">
-            <h1 className="text-3xl font-bold">404</h1>
-            <p className="mt-2 text-muted-foreground">Halaman tidak ditemukan.</p>
-            <Link className="mt-6 inline-block underline" to="/">Ke beranda</Link>
-        </section>
-    )
+  return (
+    <Container className="py-24 text-center">
+      <p className="font-mono text-6xl font-semibold tracking-[-0.04em] text-accent">404</p>
+      <h1 className="mt-4 text-2xl font-semibold tracking-tight">Halaman tidak ditemukan</h1>
+      <p className="mt-2 text-sm text-muted-foreground">
+        Alamat yang kamu buka tidak ada di roadmap ini.
+      </p>
+      <Link
+        className="mt-8 inline-flex rounded-full bg-accent px-5 py-2 text-sm font-medium text-accent-foreground transition-opacity hover:opacity-90"
+        to="/"
+      >
+        Kembali ke beranda
+      </Link>
+    </Container>
+  )
 }
 
 export default TidakDitemukan
